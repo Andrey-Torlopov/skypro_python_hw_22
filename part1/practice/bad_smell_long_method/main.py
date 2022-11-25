@@ -11,15 +11,20 @@
 
 csv = """Вася;39\nПетя;26\nВасилий Петрович;9"""
 
-
-def get_users_list():
-    # Чтение данных из строки
-    data = []
+def parse_csv(data: str) -> list[dict[str, int]]:
+    ''' 
+    Парсим csv строку в массив словарей со структурами
+    '''
+    res_data = []
     for line in csv.split('\n'):
         name, age = line.split(';')
-        data.append({'name': name, 'age': int(age)})
+        res_data.append({'name': name, 'age': int(age)})
+        
+    return res_data
 
-    # Сортировка по возрасту по возрастанию
+
+def sort_data(data: list[dict[str, int]]) -> list[dict[str, int]]:
+    '''Сортирует в списке людей по возрастанию'''
     _new_data = []
     used_person = set()
     minimum_age_person = None
@@ -48,16 +53,23 @@ def get_users_list():
                     local_minimum = person
         _new_data.append(local_minimum)
         used_person.add(local_minimum['name'])
+        return _new_data
+    
 
-    # Фильтрация
+def filter_data(data: list[dict[str, int]]) -> list[dict[str, int]]:
     result_data = []
-    for person in _new_data:
+    for person in data:
         if person['age'] < 10:
             continue
         else:
             result_data.append(person)
     return result_data
 
+
+def get_users_list():
+    data = parse_csv(csv)
+    _new_data = sort_data(data)
+    return filter_data(_new_data)
 
 if __name__ == '__main__':
     print(get_users_list())
